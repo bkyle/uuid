@@ -1,23 +1,60 @@
 #!/usr/bin/python
 
-from uuid import uuid1
+from uuid import uuid1, UUID
 from optparse import OptionParser
 import sys
+
+def print_uid(uid, format="hex", bare=True):
+	if (format == "int"):
+		print uid.int
+	else:
+		if (bare):
+			print uid.hex
+		else:
+			print str(uid)
 
 parser = OptionParser()
 parser.add_option("-x", action="store_const", const="hex", dest="format", default="hex", help="Display as hex")
 parser.add_option("-i", action="store_const", const="int", dest="format", help="Display as integers")
 parser.add_option("-b", action="store_true", dest="bare", help="Bare output, no dashes")
-parser.add_option("-n", action="store", dest="count", type="int", default="1", help="Number of uuids to generate (default: 1)")
-(options, uids) = parser.parse_args()
+parser.add_option("-n", action="store", dest="count", default="1", help="Number of uuids to generate, use - to continuously generate uuids (default: 1)")
+parser.add_option("-f", action="store", dest="file", default=False, help="Read uuids from a file, use - to read from stdin")
+(options, args) = parser.parse_args()
 
-for i in range(0, options.count):
-	uid = uuid1()
-	if (options.format == "int"):
-		print uid.int
+if (options.file):
+	file = None
+	if (options.file == "-"):
+		file = sys.stdin
 	else:
-		if (options.bare):
-			print uid.hex
-		else:
-			# uid.hex does not output a dashed version, but converting to a string does
-			print str(uid)
+		try:
+			file = open(options.file, "r")
+		except IOError as (errno, strerror):
+			print '%s: %s' % (options.file, strerror)
+			sys.exit(1)
+
+	for line in file:
+		line = line.rstrip()
+		uid = UUID(line)
+		print_uid(uid, options.format, options.bare)
+
+	file.close()
+
+elif (len(args) == 0):
+	if (options.count == "-"):
+		while (True):
+			uid = uuid1()
+			print_uid(uid, options.format, options.bare)
+	else:
+		try:
+			count = int(options.count, 10)
+		except ValueError:
+			print '-n must be either a number or a -'
+			sys.exit(1)
+
+		for i in range(0, count):
+			uid = uuid1()
+			print_uid(uid, options.format, options.bare)
+else:
+	for uid_str in args:
+		uid = uuid1(uid_str)
+		print_uid(uid, options.format, options.bare)
