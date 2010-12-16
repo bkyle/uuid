@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+# uuid
+# Bryan Kyle <bryan.kyle@gmail.com>
+#
+# Simple command line wrapper for Python's UUID module.
+
 from uuid import uuid1, UUID
 from optparse import OptionParser
 import sys
@@ -14,11 +19,12 @@ def print_uid(uid, format="hex", bare=True):
 			print str(uid)
 
 parser = OptionParser()
+parser.set_usage("%prog [options] [uuid ...]")
 parser.add_option("-x", action="store_const", const="hex", dest="format", default="hex", help="Display as hex")
 parser.add_option("-i", action="store_const", const="int", dest="format", help="Display as integers")
 parser.add_option("-b", action="store_true", dest="bare", help="Bare output, no dashes")
 parser.add_option("-n", action="store", dest="count", default="1", help="Number of uuids to generate, use - to continuously generate uuids (default: 1)")
-parser.add_option("-f", action="store", dest="file", default=False, help="Read uuids from a file, use - to read from stdin")
+parser.add_option("-f", action="store", dest="file", default=False, help="Read uuids from a file, use - to read from stdin.  This option overrides -n.")
 (options, args) = parser.parse_args()
 
 if (options.file):
@@ -59,5 +65,5 @@ elif (len(args) == 0):
 			print_uid(uid, options.format, options.bare)
 else:
 	for uid_str in args:
-		uid = uuid1(uid_str)
+		uid = UUID(uid_str)
 		print_uid(uid, options.format, options.bare)
