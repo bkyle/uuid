@@ -41,9 +41,12 @@ if (options.file):
 
 elif (len(args) == 0):
 	if (options.count == "-"):
-		while (True):
-			uid = uuid1()
-			print_uid(uid, options.format, options.bare)
+		try:
+			while (True):
+				uid = uuid1()
+				print_uid(uid, options.format, options.bare)
+		except KeyboardInterrupt:
+			sys.exit(0)
 	else:
 		try:
 			count = int(options.count, 10)
