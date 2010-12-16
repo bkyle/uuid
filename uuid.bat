@@ -1,11 +1,12 @@
 @echo off
+
 setlocal
-set ARGS=%1
-shift
+set UUID=%~dp0\uuid
 
 :next
 	set ARGS=%ARGS% %1
 	shift
 	if not "%1"=="" goto next
 
-python uuid %ARGS%
+
+python %UUID% %ARGS%
