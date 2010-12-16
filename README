@@ -3,11 +3,15 @@ Simple command line wrapper for Python's UUID module
 Bryan Kyle <bryan.kyle@gmail.com>
 
 This program is a simple command line wrapper for Python's UUID module.  It's
-purpose is to allow for the faster generation of UUIDs.
+purpose is to allow you to quickly generate and manipulate UUIDs.
 
 uuid can be invoked as follows:
 
-$ uuid      # Generate a single UUID and output as dashed hex
-$ uuid -n10 # Generate 10 UUIDs and output as dashed hex
-$ uuid -i   # Generate a single UUID and output as an integer
-$ uuid -b   # Generate a single UUID and output as hex (no dashes)
+$ uuid         # Generate a single UUID and output as dashed hex
+$ uuid -n10    # Generate 10 UUIDs and output as dashed hex
+$ uuid -n-     # Generate UUIDs until the program is stopped
+$ uuid -i      # Generate a single UUID and output as an integer
+$ uuid -b      # Generate a single UUID and output as hex (no dashes)
+$ uuid -f-     # Read UUIDs from stdin and output them (useful when combined 
+               # with -b or -i)
+$ uuid -f file # Read UUIDs from file and output them
